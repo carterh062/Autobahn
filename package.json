@@ -1,0 +1,22 @@
+{
+  "name": "HackPSU",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/carterh062/HackPSU"
+  },
+  "author": "Carter Henderson, Jared Wright",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/carterh062/HackPSU/issues"
+  },
+  "homepage": "https://github.com/carterh062/HackPSU",
+  "dependencies": {
+    "socket.io": "^1.3.5"
+  }
+}
