@@ -21,7 +21,7 @@ block content
 
 			video.src = window.URL.createObjectURL(mediaSource);
 
-			mediaSource.addEventListener('webkitsourceopen', function(e)
+			mediaSource.addEventListener('sourceopen', function(e)
 			{
 				console.log("Source opening")
 				var sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vorbis,vp8"');
