@@ -23,6 +23,7 @@ block content
 
 			mediaSource.addEventListener('webkitsourceopen', function(e)
 			{
+				console.log("Source opening")
 				var sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vorbis,vp8"');
 				var socket = io.connect('http://ssjc-app.herokuapp.com');
 
