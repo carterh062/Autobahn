@@ -1,4 +1,8 @@
+exports.stream = function(req, res){
+  var id = req.params.id;
+  res.render('stream', { title: 'Streaming Video: '+id });
+};
+
 exports.index = function(req, res){
-  console.log(req.query);
-  res.render('index', { title: 'Streaming Video' });
+  res.render('index', { title: 'Autobahn Video' });
 };
