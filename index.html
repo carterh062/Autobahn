@@ -1,0 +1,37 @@
+<html>
+<body>
+<style>
+#holder { border: 10px dashed #ccc; width: 300px; height: 300px; margin: 20px auto;}
+#holder.hover { border: 10px dashed #333; }
+</style>
+<div id="holder"></div>
+<script src="https://cdn.socket.io/socket.io-1.3.4.js"></script>
+<script>
+// prevent default behavior from changing page on dropped file
+window.ondragover = function(e) { e.preventDefault(); return false };
+window.ondrop = function(e) { e.preventDefault(); return false };
+
+var holder = document.getElementById('holder');
+holder.ondragover = function () { this.className = 'hover'; return false; };
+holder.ondragleave = function () { this.className = ''; return false; };
+holder.ondrop = function (e) {
+  e.preventDefault();
+  var socket = io('http://ssjc-app.herokuapp.com');
+  var fs = require('fs');
+  var filepath = e.dataTransfer.files[0].path;
+  console.log('file gotten');
+  socket.on('connect', function (socketinner)
+  {
+    console.log('connection established');
+    var readStream = fs.createReadStream(filepath);
+    readStream.addListener('data', function(data)
+    {
+        socket.emit('webkitStream',data);
+        console.log('emit');
+    });
+  });
+  return false;
+};
+</script>
+</body>
+</html>

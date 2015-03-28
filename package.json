@@ -1,9 +1,12 @@
 {
-"name":"nw-demo",
-"window" : {
-  "width":800,
-  "height":600,
-  "toolbar":false
-},
-"main" : "index.html"
+  "name": "nw-demo",
+  "window": {
+    "width": 800,
+    "height": 600,
+    "toolbar": true
+  },
+  "main": "index.html",
+  "dependencies": {
+    "socket.io": "^1.3.5"
+  }
 }
