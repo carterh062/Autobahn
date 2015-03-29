@@ -33,9 +33,9 @@ block content
 
 					if (myId == data.id) {
 						console.log("Connected to room")
-						socket.emit("init", "go");
+						socket.emit("init"+myId, "go");
 
-						socket.on('clientStream', function (data) 
+						socket.on('clientStream'+myId, function (data) 
 						{
 							// store the buffers until you're ready for them
 							// whatever normally would have called appendBuffer(buffer) can 
