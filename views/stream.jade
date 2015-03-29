@@ -28,15 +28,31 @@ block content
 				var sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vorbis,vp8"');
 				var socket = io.connect('http://ssjc-app.herokuapp.com');
 
-				if(socket) console.log('Socket.io Working');
+				/*if(socket) console.log('Socket.io Working');
 				socket.on('clientStream', function (data) 
 				{
 					sourceBuffer.appendBuffer(new Uint8Array(data));
 					if(video.paused){
 						video.play();
 					}
-				});
+				});*/
 
+				var myId = window.location.pathname.split( '/' )[1];
+
+				if(socket) console.log('Socket.io Working');
+
+				socket.on('clientId', function(data) {
+					if (myId == data.id) {
+						socket.emit("id", {id: myId});
+						socket.on('clientStream', function (data) 
+						{
+							sourceBuffer.appendBuffer(new Uint8Array(data));
+							if(video.paused){
+								video.play();
+							}
+						});
+					}
+				});
 				
 			});
 		}
