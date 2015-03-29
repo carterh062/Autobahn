@@ -24,34 +24,30 @@ block content
 			var video = document.getElementById('streamVideo');
 
 			video.src = window.URL.createObjectURL(mediaSource);
-
 			mediaSource.addEventListener('sourceopen', function(e)
 			{
-				console.log("Source opening")
 				var sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vorbis,vp8"');
+				sourceBuffer.mode = 'sequence';
 				var socket = io.connect('http://ssjc-app.herokuapp.com');
-
-				var myId = window.location.pathname.split( '/' )[1];
-
 				if(socket) console.log('Socket.io Working');
 
-				socket.on('clientId', function(data) {
-					if (myId == data.id) {
-						socket.emit("id", {id: myId});
-						socket.on('clientStream', function (data) 
-						{
-							sourceBuffer.appendBuffer(new Uint8Array(data));
-							if(video.paused){
-								video.play();
-							}
-						});
+				socket.on('clientStream', function (data) 
+				{
+					// store the buffers until you're ready for them
+					// whatever normally would have called appendBuffer(buffer) can 
+					// now just call queue.push(buffer) instead
+						sourceBuffer.appendBuffer(new Uint8Array(data));
+						console.log('appended');
+							video.play();
+						
+					
+				});
+				sourceBuffer.addEventListener('updateend',function(){
+					if(video.paused){
+						video.play();
 					}
 				});
-				
 			});
-		}
-		function ab2str(buf) {
-		  return String.fromCharCode.apply(null, new Uint16Array(buf));
 		}
 		main();
 			
