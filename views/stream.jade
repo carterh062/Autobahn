@@ -30,9 +30,11 @@ block content
 				
 				socket.on('clientId', function(data) {
 					myId = window.location.pathname.split( '/' )[1];
+
 					if (myId == data.id) {
+						console.log("Connected to room")
 						socket.emit("init", "go");
-						
+
 						socket.on('clientStream', function (data) 
 						{
 							// store the buffers until you're ready for them
@@ -49,6 +51,8 @@ block content
 								video.play();
 							}
 						});
+					} else {
+						console.log("Not Yet")
 					}
 				});
 				
