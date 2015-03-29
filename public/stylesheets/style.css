@@ -1,6 +1,12 @@
 body {
 	font-family: sans-serif;
 	color: #fff;
+	background: url(/images/crossed_stripes.png) top left repeat;
+
+	background-attachment: fixed;
+
+	background-position: top left;
+
 }
 img {
 	width: 200px;
@@ -12,8 +18,14 @@ img {
 	border-bottom: 1px solid #fff;
 }
 #content {
+
+	width: 100%;
 	text-align:center;
 }
 #video {
 	margin: 0 auto;
+}
+video {
+	border: 1px solid #111;
+	box-shadow: 3px 3px 5px #bbb;
 }
