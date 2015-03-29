@@ -27,23 +27,32 @@ block content
 				sourceBuffer.mode = 'sequence';
 				var socket = io.connect('http://ssjc-app.herokuapp.com');
 				if(socket) console.log('Socket.io Working');
-				socket.emit("init", "go")
-				socket.on('clientStream', function (data) 
-				{
-					// store the buffers until you're ready for them
-					// whatever normally would have called appendBuffer(buffer) can 
-					// now just call queue.push(buffer) instead
-						sourceBuffer.appendBuffer(new Uint8Array(data));
-						console.log('appended');
-							video.play();
+				
+				socket.on('clientId', function(data) {
+					myId = window.location.pathname.split( '/' )[1];
+					if (myId == data.id) {
+						socket.emit("init", "go");
 						
-					
-				});
-				sourceBuffer.addEventListener('updateend',function(){
-					if(video.paused){
-						video.play();
+						socket.on('clientStream', function (data) 
+						{
+							// store the buffers until you're ready for them
+							// whatever normally would have called appendBuffer(buffer) can 
+							// now just call queue.push(buffer) instead
+								sourceBuffer.appendBuffer(new Uint8Array(data));
+								console.log('appended');
+									video.play();
+								
+							
+						});
+						sourceBuffer.addEventListener('updateend',function(){
+							if(video.paused){
+								video.play();
+							}
+						});
 					}
 				});
+				
+				
 			});
 		}
 		main();
