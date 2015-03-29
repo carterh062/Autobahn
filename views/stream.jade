@@ -29,10 +29,16 @@ block content
 
 				if(socket) console.log('Socket.io Working');
 
-				socket.on('clientStream', function (data) 
-				{
-					sourceBuffer.append(new Uint8Array(data));
+				
+
+				mediaSource.addEventListener('updateend', function(e) {
+					socket.on('clientStream', function (data) 
+					{
+						sourceBuffer.append(new Uint8Array(data));
+					});
 				});
+
+				
 			});
 		}
 		function ab2str(buf) {
