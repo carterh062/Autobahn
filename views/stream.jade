@@ -19,7 +19,7 @@ block content
 
 			var mediaSource = new MediaSource();    
 			var video = document.getElementById('streamVideo');
-
+			video.style="display:block";
 			video.src = window.URL.createObjectURL(mediaSource);
 			mediaSource.addEventListener('sourceopen', function(e)
 			{

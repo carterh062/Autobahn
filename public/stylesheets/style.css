@@ -24,6 +24,7 @@ img {
 }
 #video {
 	margin: 0 auto;
+	display: none;
 }
 video {
 	border: 1px solid #111;
