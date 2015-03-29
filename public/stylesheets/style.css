@@ -23,6 +23,7 @@ img {
 	text-align:center;
 }
 #video {
+	margin-top: 50px;
 	margin: 0 auto;
 	display: none;
 }
