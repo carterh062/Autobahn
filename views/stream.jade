@@ -31,29 +31,25 @@ block content
 
 				socket.emit("init"+myId, "go");
 				socket.on('clientId', function(data) {
-					if (myId == data.id) {
-						console.log("Connected to room")
-						
+					console.log("Connected to room")
+					
 
-						socket.on('clientStream'+myId, function (data) 
-						{
-							// store the buffers until you're ready for them
-							// whatever normally would have called appendBuffer(buffer) can 
-							// now just call queue.push(buffer) instead
-								sourceBuffer.appendBuffer(new Uint8Array(data));
-								console.log('appended');
-									video.play();
-								
-							
-						});
-						sourceBuffer.addEventListener('updateend',function(){
-							if(video.paused){
+					socket.on('clientStream'+myId, function (data) 
+					{
+						// store the buffers until you're ready for them
+						// whatever normally would have called appendBuffer(buffer) can 
+						// now just call queue.push(buffer) instead
+							sourceBuffer.appendBuffer(new Uint8Array(data));
+							console.log('appended');
 								video.play();
-							}
-						});
-					} else {
-						console.log("Not Yet")
-					}
+							
+						
+					});
+					sourceBuffer.addEventListener('updateend',function(){
+						if(video.paused){
+							video.play();
+						}
+					});
 				});
 				
 				
