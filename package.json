@@ -3,7 +3,7 @@
   "window": {
     "width": 800,
     "height": 600,
-    "toolbar": true
+    "toolbar": false
   },
   "main": "index.html",
   "dependencies": {

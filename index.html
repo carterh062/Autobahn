@@ -1,15 +1,30 @@
 <html>
 <head>
 <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 </head>
 <body>
+  <h1 class="header">Autobahn</h1>
 <style>
+body{background: rgba(183,222,237,1);
+background: -moz-radial-gradient(center, ellipse cover, rgba(183,222,237,1) 0%, rgba(113,206,239,1) 4%, rgba(0,104,204,1) 100%);
+background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, rgba(183,222,237,1)), color-stop(4%, rgba(113,206,239,1)), color-stop(100%, rgba(0,104,204,1)));
+background: -webkit-radial-gradient(center, ellipse cover, rgba(183,222,237,1) 0%, rgba(113,206,239,1) 4%, rgba(0,104,204,1) 100%);
+background: -o-radial-gradient(center, ellipse cover, rgba(183,222,237,1) 0%, rgba(113,206,239,1) 4%, rgba(0,104,204,1) 100%);
+background: -ms-radial-gradient(center, ellipse cover, rgba(183,222,237,1) 0%, rgba(113,206,239,1) 4%, rgba(0,104,204,1) 100%);
+background: radial-gradient(ellipse at center, rgba(183,222,237,1) 0%, rgba(113,206,239,1) 4%, rgba(0,104,204,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b7deed', endColorstr='#0068cc', GradientType=1 );}
 #holder { border: 10px dashed #ccc; width: 300px; height: 300px; margin: 20px auto;}
-#holder.hover { border: 10px dashed #333; }
+.header{ text-align: center; color: white; font-size: 65px; font-family: sans-serif;}
+h3{text-align: center;margin-top: 50px; color: white;}
 </style>
-<div id="holder"></div>
-<div id="urlBody" style="text-align:center;margin:0 auto;"></div>
+<button type="button" class="btn btn-danger" id="refresh-button" style="width: 200px;height: 50px; margin-left: 300px; font-size: 25px;">Refresh</button>
+<div id="holder"><h3 style='color: white;'>Drag and drop a .webm file here!</h3></div>
+</br><a href="#" id="urlBody" style="text-align:left;margin:20px auto; margin-left: 130px;width: 300px;color:white; font-size: 20px;"></a>
 <script>
+var gui = require('nw.gui');
+
 function makeid(p)
 {
     var text = "";
@@ -19,41 +34,69 @@ function makeid(p)
     return text;
 }
 
-console.log("go")
 // prevent default behavior from changing page on dropped file
 window.ondragover = function(e) { e.preventDefault(); return false };
 window.ondrop = function(e) { e.preventDefault(); return false };
 
 var holder = document.getElementById('holder');
-holder.ondragover = function () { this.className = 'hover'; return false; };
-holder.ondragleave = function () { this.className = ''; return false; };
+holder.ondragover = function (e) { var filepath = e.dataTransfer.files[0].path;
+  var lastFour = filepath.substr(filepath.length - 4); if(lastFour === "webm"){
+      $('#holder').css('border' , '10px dashed #88C425');
+  }
+  else{
+      $('#holder').css('border' , '10px dashed #FF244A');
+  } this.className = 'hover'; return false; };
+holder.ondragleave = function () { 
+      $('#holder').css('border' , '10px dashed #ccc');
+ this.className = ''; return false; };
 holder.ondrop = function (e) {
   var io = require('socket.io-client');
   e.preventDefault();
   var fs = require('fs');
   var filepath = e.dataTransfer.files[0].path;
-  console.log('file gotten');
-
-  
-  var socket = io.connect("http://ssjc-app.herokuapp.com");
-  socket.on('connect', function (socketinner)
-  {
-    console.log('connection established');
-    id = makeid(5)
-    url = "http://webchannel.herokuapp.com/"+id;
-    console.log(url)
-
-    socket.emit('id',{id: id});
-    $("#urlBody").append("<textarea rows='1' cols='40'>"+url+"</textarea>")
-    var readStream = fs.createReadStream(filepath);
-    readStream.addListener('data', function(data)
-    {
-        socket.emit('webkitStream',data);
-        console.log('emit');
-    });
+  var lastFour = filepath.substr(filepath.length - 4);
+  var id = makeid(10);
+  var genUrl = "http://autobahn-stream.herokuapp.com/" + id;
+  $('#urlBody').text('Your url: ' + genUrl.toString());
+  var a = $('#urlBody');
+  a.on('click', function(){
+    window.open(genUrl);
   });
+
+  $('#holder h3').text('');
+  if(lastFour === "webm"){
+      $('#holder').css('border','10px dashed #88C425');
+      var socket = io.connect("http://ssjc-app.herokuapp.com");
+      socket.on('connect', function (socketinner)
+      {
+        var readStream = fs.createReadStream(filepath);
+        readStream.on('open',function(){
+          readStream.addListener('data', function(data)
+          {
+              socket.emit('webkitStream',data);
+              console.log('emit');
+          });
+        })
+        socket.on('initFile',function(){
+          readStream = fs.createReadStream(filepath);
+          readStream.on('open',function(){
+            readStream.addListener('data', function(data)
+            {
+                socket.emit('webkitStream',data);
+                console.log('emit');
+            });
+          })
+        })
+      });
+  }
+  else{
+      
+  }
   return false;
 };
+$('#refresh-button').click(function(){
+  location.reload();
+});
 </script>
 </body>
 </html>
