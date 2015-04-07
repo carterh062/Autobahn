@@ -40,7 +40,7 @@ window.ondrop = function(e) { e.preventDefault(); return false };
 
 var holder = document.getElementById('holder');
 holder.ondragover = function (e) { var filepath = e.dataTransfer.files[0].path;
-  var lastFour = filepath.substr(filepath.length - 4); if(lastFour === "webm"){
+  var fileExt = filepath.split(".")[filepath.split(".").length-1]; if(fileExt === "webm" || fileExt === "mp4"){
       $('#holder').css('border' , '10px dashed #88C425');
   }
   else{
@@ -54,9 +54,19 @@ holder.ondrop = function (e) {
   e.preventDefault();
   var fs = require('fs');
   var filepath = e.dataTransfer.files[0].path;
-  var lastFour = filepath.substr(filepath.length - 4);
+  var fileExt = filepath.split(".")[filepath.split(".").length-1];
   var id = makeid(10);
-  var genUrl = "http://autobahn-stream.herokuapp.com/" + id;
+  var codec;
+
+  if (fileExt === "webm") {
+    codec = "w";
+  } else if (fileExt === "mp4") {
+    codec = "m";
+  } else {
+    codec = "n"
+  }
+
+  var genUrl = "http://autobahn-stream.herokuapp.com/" + id + "?t=" + codec;
   $('#urlBody').text('Your url: ' + genUrl.toString());
   var a = $('#urlBody');
   a.on('click', function(){
@@ -64,7 +74,7 @@ holder.ondrop = function (e) {
   });
 
   $('#holder h3').text('');
-  if(lastFour === "webm"){
+  if(fileExt === "webm" || fileExt === "mp4"){
       $('#holder').css('border','10px dashed #88C425');
       var socket = io.connect("http://ssjc-app.herokuapp.com");
       socket.on('connect', function (socketinner)
