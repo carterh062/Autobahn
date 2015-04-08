@@ -24,7 +24,6 @@ h3{text-align: center;margin-top: 50px; color: white;}
 </br><a href="#" id="urlBody" style="text-align:left;margin:20px auto; margin-left: 130px;width: 300px;color:white; font-size: 20px;"></a>
 <script>
 var gui = require('nw.gui');
-
 function makeid(p)
 {
     var text = "";
@@ -104,6 +103,11 @@ holder.ondrop = function (e) {
   }
   return false;
 };
+win.on('close', function() {
+  this.hide(); // Pretend to be closed already
+  gui.App.clearCache();
+  this.close(true);
+});
 $('#refresh-button').click(function(){
   socket.disconnect();
   location.reload();
